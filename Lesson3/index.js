@@ -1,12 +1,10 @@
-var express = require("express");
-var app = express();
+var os = require("os");
 
-app.use(express.static("./"));
+var message = "The platform is ";
 
-app.get("/", function(req, res){
-    res.redirect("./");
-});
 
-app.listen(3000, function(){
-    console.log("Example is running on port 3000");
-});
+function main(){
+    console.log(message + os.platform());
+}
+
+main();
