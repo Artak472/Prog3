@@ -3,32 +3,17 @@ function setup() {
     var side = 30;
     var matrix = [];
     
-    //! Getting DOM objects (HTML elements)
     let weatherElement = document.getElementById('weather');
     let grassCountElement = document.getElementById('grassCount');
     let grassLiveCountElement = document.getElementById('grassLiveCount');
     let grassEaterCountElement = document.getElementById('grassEaterCount');
     let predCountElement = document.getElementById('predCount');
-    let peopleCountElement = document.getElementById('predCount');
-    //! adding socket listener on "data" <-- name, after that fire 'drawCreatures' function 
+    let peopleCountElement = document.getElementById('peopleCount');
 
     socket.on("data", drawCreatures);
 
     function drawCreatures(data) {
 
-
-        // let sendData = {
-        //     matrix: matrix,
-        //     grassCounter: grassHashiv,
-        //     grassLiveCounter: grassArr.length,
-        //     eatCounter: eatHashiv,
-        //     huntCounter: huntHashiv,
-        //     termCounter: termHashiv,
-        //     titanCounter: titanHashiv,
-        //     weather: weather
-        // }
-
-        //! after getting data pass it to matrix variable
         matrix = data.matrix;
         weatherElement.innerText = data.weather;
         grassCountElement.innerText = data.grassCounter;
@@ -36,13 +21,11 @@ function setup() {
         grassEaterCountElement.innerText = data.eatCounter;
         predCountElement.innerText = data.predCounter;
         peopleCountElement.innerText = data.peopleCounter;
-        //! Every time it creates new Canvas with new matrix size
-        createCanvas(matrix[0].length * side, matrix.length * side)
-        //! clearing background by setting it to new grey color
-        background('#acacac');
-        //! Draw grassCount and grassEaterCount to HTML (use DOM objects to update information, yes, and use .innerText <- function)
 
-        //! Drawing and coloring RECTs
+        createCanvas(matrix[0].length * side, matrix.length * side)
+
+        background('#acacac');
+
         for (var i = 0; i < matrix.length; i++) {
             for (var j = 0; j < matrix[i].length; j++) {
                 if (matrix[i][j] == 1) {
@@ -66,7 +49,7 @@ function setup() {
                     fill('red');
                     rect(j * side, i * side, side, side);
                 } else if (matrix[i][j] == 4) {
-                    fill('blue');
+                    fill('purple');
                     rect(j * side, i * side, side, side);
                 }
             }

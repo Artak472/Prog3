@@ -1,60 +1,50 @@
-//! Requiring modules  --  START
 var Grass = require("./modules/Grass.js");
 var GrassEater = require("./modules/GrassEater.js");
 var Predator = require("./modules/Predator.js");
 var People = require("./modules/People.js");
-let random = require('./modules/random');
-//! Requiring modules  --  END
+var random = require('./modules/random');
 
-//! Initializing global arrays  --  START
 grassArr = [];
 eatArr = [];
 predArr = [];
 peopleArr = [];
 matrix = [];
-//! Initializing global arrays  --  END
 
-// statistics start
 grassHashiv = 0;
 eatHashiv = 0;
 predHashiv = 0;
 peopleHashiv = 0;
-// statistics end
-
-//! Creating MATRIX -- START
 
 function matrixGenerator(matrixSize, grass, eat, pred, people) {
-    for (let i = 0; i < matrixSize; i++) {
+    for (var i = 0; i < matrixSize; i++) {
         matrix[i] = [];
-        for (let o = 0; o < matrixSize; o++) {
+        for (var o = 0; o < matrixSize; o++) {
             matrix[i][o] = 0;
         }
     }
-    for (let i = 0; i < grass; i++) {
-        let customX = Math.floor(random(matrixSize));
-        let customY = Math.floor(random(matrixSize));
+    for (var i = 0; i < grass; i++) {
+        var customX = Math.floor(random(matrixSize));
+        var customY = Math.floor(random(matrixSize));
         matrix[customY][customX] = 1;
     }
-    for (let i = 0; i < eat; i++) {
-        let customX = Math.floor(random(matrixSize));
-        let customY = Math.floor(random(matrixSize));
+    for (var i = 0; i < eat; i++) {
+        var customX = Math.floor(random(matrixSize));
+        var customY = Math.floor(random(matrixSize));
         matrix[customY][customX] = 2;
     }
-    for (let i = 0; i < pred; i++) {
-        let customX = Math.floor(random(matrixSize));
-        let customY = Math.floor(random(matrixSize));
+    for (var i = 0; i < pred; i++) {
+        var customX = Math.floor(random(matrixSize));
+        var customY = Math.floor(random(matrixSize));
         matrix[customY][customX] = 3;
     }
-    for (let i = 0; i < people; i++) {
-        let customX = Math.floor(random(matrixSize));
-        let customY = Math.floor(random(matrixSize));
+    for (var i = 0; i < people; i++) {
+        var customX = Math.floor(random(matrixSize));
+        var customY = Math.floor(random(matrixSize));
         matrix[customY][customX] = 4;
     }
 }
-matrixGenerator(20, 25, 20, 15, 10);
-//! Creating MATRIX -- END
+matrixGenerator(20, 25, 22, 20, 10);
 
-//! SERVER STUFF  --  START
 var express = require('express');
 var app = express();
 var server = require('http').Server(app);
@@ -64,7 +54,6 @@ app.get('/', function (req, res) {
     res.redirect('index.html');
 });
 server.listen(3000);
-//! SERVER STUFF END  --  END
 
 function creatingObjects() {
     for (var y = 0; y < matrix.length; y++) {
@@ -94,8 +83,8 @@ function creatingObjects() {
 
 creatingObjects();
 
-let exanak = 0;
-let weather = "winter"
+var exanak = 0;
+var weather = "winter"
 
 function game() {
 
@@ -135,7 +124,7 @@ function game() {
     }
 
     //! Object to send
-    let sendData = {
+    var sendData = {
         matrix: matrix,
         grassCounter: grassHashiv,
         grassLiveCounter: grassArr.length,
