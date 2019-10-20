@@ -51,7 +51,7 @@ function matrixGenerator(matrixSize, grass, eat, pred, people) {
         matrix[customY][customX] = 4;
     }
 }
-matrixGenerator(20, 25, 20, 15, 10, 2);
+matrixGenerator(20, 25, 20, 15, 10);
 //! Creating MATRIX -- END
 
 //! SERVER STUFF  --  START
@@ -80,8 +80,8 @@ function creatingObjects() {
             }
             else if (matrix[y][x] == 3) {
                 var pred = new Predator(x, y);
-                huntArr.push(pred);
-                huntHashiv++
+                predArr.push(pred);
+                predHashiv++
             }
             else if (matrix[y][x] == 4) {
                 var people = new People(x, y);
@@ -124,13 +124,13 @@ function game() {
         }
     }
     if (predArr[0] !== undefined) {
-        for (var i in huntArr) {
-            huntArr[i].eat();
+        for (var i in predArr) {
+            predArr[i].eat();
         }
     }
     if (peopleArr[0] !== undefined) {
-        for (var i in termArr) {
-            termArr[i].eat();
+        for (var i in peopleArr) {
+            peopleArr[i].eat();
         }
     }
 
@@ -140,8 +140,8 @@ function game() {
         grassCounter: grassHashiv,
         grassLiveCounter: grassArr.length,
         eatCounter: eatHashiv,
-        predCounter: huntHashiv,
-        peopleCounter: termHashiv,
+        predCounter: predHashiv,
+        peopleCounter: peopleHashiv,
         weather: weather
     }
 

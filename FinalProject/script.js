@@ -8,8 +8,8 @@ function setup() {
     let grassCountElement = document.getElementById('grassCount');
     let grassLiveCountElement = document.getElementById('grassLiveCount');
     let grassEaterCountElement = document.getElementById('grassEaterCount');
-    let predCountElement = document.getElementById('huntCount');
-    let peopleCountElement = document.getElementById('termCount');
+    let predCountElement = document.getElementById('predCount');
+    let peopleCountElement = document.getElementById('predCount');
     //! adding socket listener on "data" <-- name, after that fire 'drawCreatures' function 
 
     socket.on("data", drawCreatures);

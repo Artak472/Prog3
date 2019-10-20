@@ -1,17 +1,11 @@
 var LiveForm = require("./LiveForm");
 var random = require("./random.js");
 
-module.exports = class Predator extends LiveForm{
-    constructor(x, y, index) {
-        this.x = x;
-        this.y = y;
-        this.energy = 18;
-        this.index = index;
-        this.directions = [];
-        this.anun = 0;
+module.exports = class Predator extends LiveForm {
+    constructor(x, y) {
+        super(x, y);
+        this.life = 14;
     }
-
-
     getNewCoordinates() {
         this.directions = [
             [this.x - 1, this.y - 1],
@@ -24,109 +18,79 @@ module.exports = class Predator extends LiveForm{
             [this.x + 1, this.y + 1]
         ];
     }
-
-
-    chooseCell(character1,character2,character3) {
+    chooseCell(character) {
         this.getNewCoordinates();
-        var found = [];
-        for (var i in this.directions) {
-            var x = this.directions[i][0];
-            var y = this.directions[i][1];
-            if (x >= 0 && x < matrix[0].length && y >= 0 && y < matrix.length) {
-                if (matrix[y][x] == character1 ||matrix[y][x] == character2 || matrix[y][x] == character3) {
-                    found.push(this.directions[i]);
-                }
-            }
-        }
-        return found;
-    }
-
-
-    move() {
-        var empty = this.chooseCell(0);
-        var cell = random(empty);
-
-        if (cell) {
-             var newX = cell[0];
-            var newY = cell[1];
-            matrix[this.y][this.x]=this.anun;
-            if(matrix[newY][newX]==1){
-          this.anun=1;
-            }
-              if(matrix[newY][newX]==2){
-          this.anun=2;
-            }
-           
-            matrix[newY][newX] = this.index;
-            matrix[this.y][this.x] = 0;
-            this.x = newX;
-            this.y = newY;
-            this.energy--
-            if (this.energy == 0) {
-                this.die()
-            }
-        }
-    }
-
-
-    eat() {
-
-        var empty = this.chooseCell(2);
-        var cell = random(empty);
-
-        if (cell) {
-            var newX = cell[0];
-            var newY = cell[1];
-
-            matrix[newY][newX] = this.index;
-            matrix[this.y][this.x] = 0;
-
-            this.x = newX;
-            this.y = newY;
-            for (var i in grassEaterArr) {
-                if (newX == grassEaterArr[i].x && newY == grassEaterArr[i].y) {
-                    grassEaterArr.splice(i, 1);
-                    break;
-                }
-            }
-
-            this.energy++
-            if (this.energy == 18) {
-                this.mul();
-            }
-
-        } else {
-            this.move();
-        }
-    }
-
-
+        return super.chooseCell(character);
+    } 
     mul() {
-        this.multiply++;
-        var emptyCells = this.chooseCell(0,1,2);
+        var emptyCells = this.chooseCell(0);
         var newCell = random(emptyCells);
 
-        //console.log(emptyCells);
-        if (newCell && this.energy >= 18) {
-            predHashiv++;
-            var newX = newCell[0];
-            var newY = newCell[1];
-            matrix[newY][newX] = this.index;
-
-            var pred = new Predator(newX, newY, this.index);
+        if (newCell) {
+            huntHashiv++
+            var x = newCell[0];
+            var y = newCell[1];
+            matrix[y][x] = 3;
+            var pred = new Predator(x, y);
             predArr.push(pred);
-            this.energy = 0;
+            this.life = 7;
         }
     }
+    eat() {
+        var emptyCells = this.chooseCell(2);
+        var newCell = random(emptyCells);
 
+        if (newCell) {
 
-    die(){
-        for (var i in predArr) {
-                if (this.x == predArr[i].x && this.y == predArr[i].y) {
-                    predArr.splice(i, 1);
-                    break;
+            this.life++;
+            var x = newCell[0];
+            var y = newCell[1];
+
+            matrix[y][x] = 3;
+            matrix[this.y][this.x] = 0;
+
+            for (var i in eatArr) {
+                if (eatArr[i].x == x && eatArr[i].y == y) {
+                    eatArr.splice(i, 1)
                 }
             }
-            matrix[this.y][this.x]=0;
+            this.x = x;
+            this.y = y;
+
+            if (this.life >= 17) {
+                this.mul();
+            }
+        }
+        else {
+            this.move()
+        }
+    }
+    move() {
+        this.life--;
+        var emptyCells1 = this.chooseCell(0);
+        var emptyCells2 = this.chooseCell(1);
+        var emptyCells = emptyCells1.concat(emptyCells2)
+        var newCell = random(emptyCells);
+
+        if (newCell) {
+            var x = newCell[0];
+            var y = newCell[1];
+            matrix[y][x] = 3;
+            matrix[this.y][this.x] = 0;
+            this.y = y;
+            this.x = x;
+        }
+        if (this.life < 0) {
+            this.die();
+        }
+    }
+    die() {
+        matrix[this.y][this.x] = 0;
+
+        for (var i in predArr) {
+            if (predArr[i].x == this.x && predArr[i].y == this.y) {
+                predArr.splice(i, 1)
+            }
+        }
     }
 }

@@ -1,14 +1,10 @@
 var LiveForm = require("./LiveForm");
-var random = require("./random");
-
-module.exports = class People extends LiveForm{
-    constructor(x, y, index) {
-        super(x, y, index);
-        this.energy = 5;
-        this.anun = 0;
+var random = require("./random.js");
+module.exports = class People extends LiveForm {
+    constructor(x, y) {
+        super(x, y);
+        this.life = 13;
     }
-
-
     getNewCoordinates() {
         this.directions = [
             [this.x - 1, this.y - 1],
@@ -37,127 +33,80 @@ module.exports = class People extends LiveForm{
             [this.x + 1, this.y - 2]
         ];
     }
-
-    getNewCoordinates1() {
-        this.directions = [
-            [this.x - 1, this.y - 1],
-            [this.x, this.y - 1],
-            [this.x + 1, this.y - 1],
-            [this.x - 1, this.y],
-            [this.x + 1, this.y],
-            [this.x - 1, this.y + 1],
-            [this.x, this.y + 1],
-            [this.x + 1, this.y + 1]
-        ];
-    }
-
-
-    chooseCell(character1,character2,character3,character4) {
-        if(ex == "amar"){
-            this.getNewCoordinates();
-        }
-        else if(ex == "dzmer"){
-            this.getNewCoordinates1();
-        }
-        var found = [];
-        for (var i in this.directions) {
-            var x = this.directions[i][0];
-            var y = this.directions[i][1];
-            if (x >= 0 && x < matrix[0].length && y >= 0 && y < matrix.length) {
-                if (matrix[y][x] == character1 ||matrix[y][x] == character2 || matrix[y][x] == character3) {
-                    found.push(this.directions[i]);
-                }
-            }
-        }
-        return found;
-    }
-
-
-    move() {
-        var empty = this.chooseCell(0,1,5);
-        var cell = random(empty);
-
-        if (cell) {
-             var newX = cell[0];
-            var newY = cell[1];
-            matrix[this.y][this.x]=this.anun;
-            if(matrix[newY][newX]==1){
-          		this.anun=1;
-            }
-              if(matrix[newY][newX]==2){
-          		this.anun=2;
-            }
-           
-            matrix[newY][newX] = this.index;
-            matrix[this.y][this.x] = 0;
-            this.x = newX;
-            this.y = newY;
-        }
-        this.energy--
-        if (this.energy == 0) {
-            this.die()
-        }
-    }
-
-
-    eat() {
-
-        var empty = this.chooseCell(3);
-        var newCell = random(empty);
+    
+    chooseCell(character) {
+        this.getNewCoordinates();
+        return super.chooseCell(character);
+    } 
+    mul() {
+        let emptyCells = this.chooseCell(0);
+        let newCell = random(emptyCells);
 
         if (newCell) {
-            var newX = newCell[0];
-            var newY = newCell[1];
-
-            matrix[newY][newX] = this.index;
-            matrix[this.y][this.x] = 0;
-
-            this.x = newX;
-            this.y = newY;
-            for (var i in predArr) {
-                if (newX == predArr[i].x && newY == predArr[i].y) {
-                    predArr.splice(i, 1);
-                    break;
-                }
-            }
-
-            this.energy++
-            if (this.energy == 5) {
-                this.mul();
-            }
-
-        } else {
-            this.move();
+            peopleHashiv++
+            var x = newCell[0];
+            var y = newCell[1];
+            matrix[y][x] = 4;
+            var people = new People(x, y);
+            peopleArr.push(people);
+            this.life = 8;
         }
     }
-
-
-    mul() {
-        this.multiply++;
-        var emptyCells = this.chooseCell(0,1,2,3);
+    eat() {
+        var emptyCells = this.chooseCell(3);
         var newCell = random(emptyCells);
 
-        //console.log(emptyCells);
-        if (newCell && this.energy >= 5) {
-            peopleHashiv++;
-            var newX = newCell[0];
-            var newY = newCell[1];
-            matrix[newY][newX] = this.index;
+        if (newCell) {
 
-            var people = new Predator(newX, newY, this.index);
-            peopleArr.push(people);
-            this.energy = 0;
-        }
-    }
+            this.life++;
+            var x = newCell[0];
+            var y = newCell[1];
 
+            matrix[y][x] = 4;
+            matrix[this.y][this.x] = 0;
 
-    die(){
-        for (var i in peopleArr) {
-                if (this.x == peopleArr[i].x && this.y == peopleArr[i].y) {
-                    peopleArr.splice(i, 1);
-                    break;
+            for (var i in predArr) {
+                if (predArr[i].x == x && predArr[i].y == y) {
+                    predArr.splice(i, 1)
                 }
             }
-            matrix[this.y][this.x]=0;
+            this.x = x;
+            this.y = y;
+
+            if (this.life >= 16) {
+                this.mul();
+            }
+        }
+        else {
+            this.move()
+        }
+    }
+    move() {
+        this.life--;
+        var emptyCells1 = this.chooseCell(0);
+        var emptyCells2 = this.chooseCell(1);
+        var emptyCells = emptyCells1.concat(emptyCells2)
+        var newCell = random(emptyCells);
+
+        if (newCell) {
+            var x = newCell[0];
+            var y = newCell[1];
+            matrix[y][x] = 4;
+            matrix[this.y][this.x] = 0;
+            this.y = y;
+            this.x = x;
+        }
+        if (this.life < 0) {
+            this.die();
+        }
+    }
+    die() {
+        matrix[this.y][this.x] = 0;
+
+        for (var i in peopleArr) {
+            if (peopleArr[i].x == this.x && peopleArr[i].y == this.y) {
+                peopleArr.splice(i, 1)
+            }
+        }
     }
 }
