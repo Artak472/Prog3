@@ -1,10 +1,10 @@
 var LiveForm = require("./LiveForm");
 var random = require("./random.js");
 
-module.exports = class Predator extends LiveForm {
+module.exports = class Snake extends LiveForm {
     constructor(x, y) {
         super(x, y);
-        this.life = 14;
+        this.life = 0;
     }
     getNewCoordinates() {
         this.directions = [
@@ -22,24 +22,9 @@ module.exports = class Predator extends LiveForm {
         this.getNewCoordinates();
         return super.chooseCell(character);
     } 
-    mul() {
-        var emptyCells = this.chooseCell(0);
-        var newCell = random(emptyCells);
-
-        if (newCell) {
-            predHashiv++
-            var x = newCell[0];
-            var y = newCell[1];
-            matrix[y][x] = 3;
-            var pred = new Predator(x, y);
-            predArr.push(pred);
-            this.life = 7;
-        }
-    }
+    
     eat() {
-        var emptyCells1 = this.chooseCell(2);
-        var emptyCells2 = this.chooseCell(3);
-        var emptyCells = emptyCells2.concat(emptyCells1)
+        var emptyCells = this.chooseCell(2);
         var newCell = random(emptyCells);
 
         if (newCell) {
@@ -48,8 +33,7 @@ module.exports = class Predator extends LiveForm {
             var x = newCell[0];
             var y = newCell[1];
 
-            matrix[y][x] = 3;
-            matrix[this.y][this.x] = 0;
+            matrix[y][x] = 5;
 
             for (var i in eatArr) {
                 if (eatArr[i].x == x && eatArr[i].y == y) {
@@ -59,8 +43,8 @@ module.exports = class Predator extends LiveForm {
             this.x = x;
             this.y = y;
 
-            if (this.life >= 20) {
-                this.mul();
+            if (this.life >= 50) {
+                this.die();
             }
         }
         else {
@@ -68,7 +52,7 @@ module.exports = class Predator extends LiveForm {
         }
     }
     move() {
-        this.life--;
+        this.life++;
         var emptyCells1 = this.chooseCell(0);
         var emptyCells2 = this.chooseCell(1);
         var emptyCells = emptyCells1.concat(emptyCells2)
@@ -77,21 +61,20 @@ module.exports = class Predator extends LiveForm {
         if (newCell) {
             var x = newCell[0];
             var y = newCell[1];
-            matrix[y][x] = 3;
-            matrix[this.y][this.x] = 0;
+            matrix[y][x] = 5;
             this.y = y;
             this.x = x;
         }
-        if (this.life < 0) {
+        if (this.life >= 50) {
             this.die();
         }
     }
     die() {
         matrix[this.y][this.x] = 0;
 
-        for (var i in predArr) {
-            if (predArr[i].x == this.x && predArr[i].y == this.y) {
-                predArr.splice(i, 1)
+        for (var i in snakeArr) {
+            if (snakeArr[i].x == this.x && snakeArr[i].y == this.y) {
+                snakeArr.splice(i, 1)
             }
         }
     }

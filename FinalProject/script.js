@@ -3,12 +3,17 @@ function setup() {
     var side = 30;
     var matrix = [];
     
-    let weatherElement = document.getElementById('weather');
-    let grassCountElement = document.getElementById('grassCount');
-    let grassLiveCountElement = document.getElementById('grassLiveCount');
-    let grassEaterCountElement = document.getElementById('grassEaterCount');
-    let predCountElement = document.getElementById('predCount');
-    let peopleCountElement = document.getElementById('peopleCount');
+    var weatherElement = document.getElementById('weather');
+    var grassCountElement = document.getElementById('grassCount');
+    var grassLiveCountElement = document.getElementById('grassLiveCount');
+    var grassEaterCountElement = document.getElementById('grassEaterCount');
+    var grassEaterLiveCountElement = document.getElementById('grassEaterLiveCount');
+    var predCountElement = document.getElementById('predCount');
+    var predLiveCountElement = document.getElementById('predLiveCount');
+    var peopleCountElement = document.getElementById('peopleCount');
+    var peopleLiveCountElement = document.getElementById('peopleLiveCount');
+    var snakeCountElement = document.getElementById('snakeCount');
+    var snakeLiveCountElement = document.getElementById('snakeLiveCount');
 
     socket.on("data", drawCreatures);
 
@@ -19,8 +24,13 @@ function setup() {
         grassCountElement.innerText = data.grassCounter;
         grassLiveCountElement.innerText = data.grassLiveCounter;
         grassEaterCountElement.innerText = data.eatCounter;
+        grassEaterLiveCountElement.innerText = data.eatLiveCounter;
         predCountElement.innerText = data.predCounter;
+        predLiveCountElement.innerText = data.predLiveCounter;
         peopleCountElement.innerText = data.peopleCounter;
+        peopleLiveCountElement.innerText = data.peopleLiveCounter;
+        snakeCountElement.innerText = data.snakeCounter;
+        snakeLiveCountElement.innerText = data.snakeLiveCounter;
 
         createCanvas(matrix[0].length * side, matrix.length * side)
 
@@ -50,6 +60,9 @@ function setup() {
                     rect(j * side, i * side, side, side);
                 } else if (matrix[i][j] == 4) {
                     fill('purple');
+                    rect(j * side, i * side, side, side);
+                } else if (matrix[i][j] == 5) {
+                    fill('pink');
                     rect(j * side, i * side, side, side);
                 }
             }

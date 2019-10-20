@@ -2,20 +2,23 @@ var Grass = require("./modules/Grass.js");
 var GrassEater = require("./modules/GrassEater.js");
 var Predator = require("./modules/Predator.js");
 var People = require("./modules/People.js");
+var Snake = require("./modules/Snake.js");
 var random = require('./modules/random');
 
 grassArr = [];
 eatArr = [];
 predArr = [];
 peopleArr = [];
+snakeArr = [];
 matrix = [];
 
 grassHashiv = 0;
 eatHashiv = 0;
 predHashiv = 0;
 peopleHashiv = 0;
+snakeHashiv = 0;
 
-function matrixGenerator(matrixSize, grass, eat, pred, people) {
+function matrixGenerator(matrixSize, grass, eat, pred, people, snake) {
     for (var i = 0; i < matrixSize; i++) {
         matrix[i] = [];
         for (var o = 0; o < matrixSize; o++) {
@@ -42,8 +45,13 @@ function matrixGenerator(matrixSize, grass, eat, pred, people) {
         var customY = Math.floor(random(matrixSize));
         matrix[customY][customX] = 4;
     }
+    for (var i = 0; i < snake; i++) {
+        var customX = Math.floor(random(matrixSize));
+        var customY = Math.floor(random(matrixSize));
+        matrix[customY][customX] = 5;
+    }
 }
-matrixGenerator(20, 25, 22, 20, 10);
+matrixGenerator(25, 25, 25, 15, 2, 2);
 
 var express = require('express');
 var app = express();
@@ -77,6 +85,11 @@ function creatingObjects() {
                 peopleArr.push(people);
                 peopleHashiv++
             }
+            else if (matrix[y][x] == 5) {
+                var snake = new Snake(x, y);
+                snakeArr.push(snake);
+                snakeHashiv++
+            }
         }
     }
 }
@@ -84,7 +97,8 @@ function creatingObjects() {
 creatingObjects();
 
 var exanak = 0;
-var weather = "winter"
+var weather = "winter";
+module.exports = weather;
 
 function game() {
 
@@ -122,6 +136,11 @@ function game() {
             peopleArr[i].eat();
         }
     }
+    if (snakeArr[0] !== undefined) {
+        for (var i in snakeArr) {
+            snakeArr[i].eat();
+        }
+    }
 
     //! Object to send
     var sendData = {
@@ -129,8 +148,13 @@ function game() {
         grassCounter: grassHashiv,
         grassLiveCounter: grassArr.length,
         eatCounter: eatHashiv,
+        eatLiveCounter: eatArr.length,
         predCounter: predHashiv,
+        predLiveCounter: predArr.length,
         peopleCounter: peopleHashiv,
+        peopleLiveCounter: peopleArr.length,
+        snakeCounter: snakeHashiv,
+        snakeLiveCounter: snakeArr.length,
         weather: weather
     }
 

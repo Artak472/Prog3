@@ -53,7 +53,9 @@ module.exports = class People extends LiveForm {
         }
     }
     eat() {
-        var emptyCells = this.chooseCell(3);
+        var emptyCells1 = this.chooseCell(2);
+        var emptyCells2 = this.chooseCell(3);
+        var emptyCells = emptyCells2.concat(emptyCells1)
         var newCell = random(emptyCells);
 
         if (newCell) {
@@ -65,6 +67,11 @@ module.exports = class People extends LiveForm {
             matrix[y][x] = 4;
             matrix[this.y][this.x] = 0;
 
+            for (var i in eatArr) {
+                if (eatArr[i].x == x && eatArr[i].y == y) {
+                    eatArr.splice(i, 1)
+                }
+            }
             for (var i in predArr) {
                 if (predArr[i].x == x && predArr[i].y == y) {
                     predArr.splice(i, 1)
@@ -73,7 +80,7 @@ module.exports = class People extends LiveForm {
             this.x = x;
             this.y = y;
 
-            if (this.life >= 16) {
+            if (this.life >= 20) {
                 this.mul();
             }
         }
