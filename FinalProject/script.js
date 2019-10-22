@@ -14,6 +14,10 @@ function setup() {
     var peopleLiveCountElement = document.getElementById('peopleLiveCount');
     var snakeCountElement = document.getElementById('snakeCount');
     var snakeLiveCountElement = document.getElementById('snakeLiveCount');
+    var peacCountElement = document.getElementById('peacCount');
+    var peacLiveCountElement = document.getElementById('peacLiveCount');
+    var peacFCountElement = document.getElementById('peacFCount');
+    var peacFLiveCountElement = document.getElementById('peacFLiveCount');
 
     socket.on("data", drawCreatures);
 
@@ -31,6 +35,10 @@ function setup() {
         peopleLiveCountElement.innerText = data.peopleLiveCounter;
         snakeCountElement.innerText = data.snakeCounter;
         snakeLiveCountElement.innerText = data.snakeLiveCounter;
+        peacCountElement.innerText = data.peacCounter;
+        peacLiveCountElement.innerText = data.peacLiveCounter;
+        peacFCountElement.innerText = data.peacFCounter;
+        peacFLiveCountElement.innerText = data.peacFLiveCounter;
 
         createCanvas(matrix[0].length * side, matrix.length * side)
 
@@ -64,7 +72,13 @@ function setup() {
                 } else if (matrix[i][j] == 5) {
                     fill('pink');
                     rect(j * side, i * side, side, side);
-                }
+                } else if (matrix[i][j] == 6) {
+                    fill('#5c2506');
+                    rect(j * side, i * side, side, side);
+                } else if (matrix[i][j] == 7) {
+                    fill('#89380a');
+                    rect(j * side, i * side, side, side);
+                }                
             }
         }
     }

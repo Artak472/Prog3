@@ -3,6 +3,8 @@ var GrassEater = require("./modules/GrassEater.js");
 var Predator = require("./modules/Predator.js");
 var People = require("./modules/People.js");
 var Snake = require("./modules/Snake.js");
+var Peaceful = require("./modules/Peaceful.js");
+var PeacefulF = require("./modules/PeacefulF.js");
 var random = require('./modules/random');
 
 grassArr = [];
@@ -10,6 +12,8 @@ eatArr = [];
 predArr = [];
 peopleArr = [];
 snakeArr = [];
+peacArr = [];
+peacFArr = [];
 matrix = [];
 
 grassHashiv = 0;
@@ -17,8 +21,10 @@ eatHashiv = 0;
 predHashiv = 0;
 peopleHashiv = 0;
 snakeHashiv = 0;
+peacHashiv = 0;
+peacFHashiv = 0;
 
-function matrixGenerator(matrixSize, grass, eat, pred, people, snake) {
+function matrixGenerator(matrixSize, grass, eat, pred, people, snake, peac, peacF) {
     for (var i = 0; i < matrixSize; i++) {
         matrix[i] = [];
         for (var o = 0; o < matrixSize; o++) {
@@ -50,8 +56,18 @@ function matrixGenerator(matrixSize, grass, eat, pred, people, snake) {
         var customY = Math.floor(random(matrixSize));
         matrix[customY][customX] = 5;
     }
+    for (var i = 0; i < peac; i++) {
+        var customX = Math.floor(random(matrixSize));
+        var customY = Math.floor(random(matrixSize));
+        matrix[customY][customX] = 6;
+    }
+    for (var i = 0; i < peacF; i++) {
+        var customX = Math.floor(random(matrixSize));
+        var customY = Math.floor(random(matrixSize));
+        matrix[customY][customX] = 7;
+    }
 }
-matrixGenerator(25, 25, 25, 15, 2, 2);
+matrixGenerator(40, 25, 25, 15, 2, 2, 15, 15);
 
 var express = require('express');
 var app = express();
@@ -89,6 +105,16 @@ function creatingObjects() {
                 var snake = new Snake(x, y);
                 snakeArr.push(snake);
                 snakeHashiv++
+            }
+            else if (matrix[y][x] == 6) {
+                var peac = new Peaceful(x, y);
+                peacArr.push(peac);
+                peacHashiv++
+            }
+            else if (matrix[y][x] == 7) {
+                var peacF = new PeacefulF(x, y);
+                peacFArr.push(peacF);
+                peacFHashiv++
             }
         }
     }
@@ -141,8 +167,17 @@ function game() {
             snakeArr[i].eat();
         }
     }
+    if (peacArr[0] !== undefined) {
+        for (var i in peacArr) {
+            peacArr[i].mull();
+        }
+    }
+    if (peacFArr[0] !== undefined) {
+        for (var i in peacFArr) {
+            peacFArr[i].move();
+        }
+    }
 
-    //! Object to send
     var sendData = {
         matrix: matrix,
         grassCounter: grassHashiv,
@@ -155,10 +190,13 @@ function game() {
         peopleLiveCounter: peopleArr.length,
         snakeCounter: snakeHashiv,
         snakeLiveCounter: snakeArr.length,
+        peacCounter: peacHashiv,
+        peacLiveCounter: peacArr.length,
+        peacFCounter: peacFHashiv,
+        peacFLiveCounter: peacFArr.length,
         weather: weather
     }
 
-    //! Send data over the socket to clients who listens "data"
     io.sockets.emit("data", sendData);
 }
 
